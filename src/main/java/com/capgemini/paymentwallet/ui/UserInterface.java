@@ -40,29 +40,56 @@ public class UserInterface {
 						System.exit(0);
 						break;
 					default:
-						throw new WalletException("\nYou have entered a wrong choice \nPlease Login Again ");										
+						throw new WalletException("Please Select Again");										
 					}
 				}
 				catch(Exception e) {
-					WalletUser.showMsg("Exception occured:"+e.getMessage());
+					WalletUser.showMsg("Exception occured: "+e.getMessage()+"\nYou have entered a wrong choice\n");
 					paymentWallet();
 				}		
 	}
 
 		private void registerUser() {
+			Integer userId=0;
+			String password = null;
+			String phoneNumber=null;
 			
 			try {
-				WalletUser.showMsg("Enter your userId      : ");
-				Integer userId = Integer.parseInt(bsr.readLine());
-				WalletUser.showMsg("Enter your userName    : ");
-				String userName = bsr.readLine();
-				WalletUser.showMsg("Enter your password    : ");
-				String password = bsr.readLine();
-				WalletUser.showMsg("Enter your phoneNumber : ");
-				String phoneNumber = bsr.readLine();
-				WalletUser.showMsg("Enter your loginName   : ");
-				String loginName = bsr.readLine();
+				WalletUser.showMsg("Enter your Details\n");
+				try {
+					WalletUser.showMsg("Enter your UserId      : ");
+					 userId = Integer.parseInt(bsr.readLine());
+				}catch (Exception e) {
+					WalletUser.showMsg("Exception occured: "+e.getMessage());
+					WalletUser.showMsg("Create Valid UserId (UserId can only be an Integer)\n");
+					registerUser();
+				}
 				
+				WalletUser.showMsg("Enter your UserName    : ");
+				String userName = bsr.readLine();
+				
+			try {
+				WalletUser.showMsg("Enter your Password    : ");
+				 password = bsr.readLine();
+				if(password.length()<8)
+					throw new WalletException("Create Valid Password (Password must be minimum of 8 characters)\n");											
+			}catch(Exception e) {
+				WalletUser.showMsg("Exception occured: "+e.getMessage());
+				registerUser();
+			}
+				
+			try {
+				WalletUser.showMsg("Enter your PhoneNumber :");
+				 phoneNumber = bsr.readLine();
+				if(phoneNumber.length()!=10)
+					throw new WalletException("Enter Valid PhoneNumber (PhoneNumber must be minimum of 10 Digits)\n");											
+			}catch(Exception e) {
+				WalletUser.showMsg("Exception occured: "+e.getMessage());
+				registerUser();
+			}	
+							
+				WalletUser.showMsg("Enter your LoginName   : ");
+				String loginName = bsr.readLine();				
 				
 				wCon.registerUser(new WalletUser(userId,userName,password,phoneNumber,loginName));
 			    paymentWallet();	    	
@@ -84,15 +111,18 @@ public class UserInterface {
 					loginAdmin();
 					break;		
 				default :
-					throw new WalletException("\\nYou Have Entered a Wrong Choice\\nPlease Login Again");	
+					throw new WalletException(" You Have Entered a Wrong Choice \nPlease Login Again\n");	
 				}
 			} 
 			catch (NumberFormatException e) {
-				e.getMessage();
+				WalletUser.showMsg(e.getMessage());
+				login();
 			}catch (IOException ioe) {
-				ioe.getMessage();
+				WalletUser.showMsg(ioe.getMessage());
+				login();
 			} catch (WalletException e) {
-				WalletUser.showMsg("Exception Occured:"+ e.getMessage());
+				WalletUser.showMsg("Exception Occured: "+ e.getMessage());
+				login();
 			}
 			
 		}
@@ -112,15 +142,19 @@ public class UserInterface {
 						homePageAdmin();
 					}					
 					else {
-						WalletUser.showMsg("Invalid Password Or Invalid User ID");	
-						loginAdmin();
+						throw new WalletException("Invalid Password Or Invalid User ID");						
 					}
 				} 
 				catch (NumberFormatException ne) {
-					ne.getMessage();
+					WalletUser.showMsg(ne.getMessage());
+					loginAdmin();
 				} 
 				catch (IOException ioe) {
-					ioe.getMessage();
+					WalletUser.showMsg(ioe.getMessage());
+					login();
+				} catch (WalletException e) {
+					WalletUser.showMsg("Exception Occured: "+e.getMessage());	
+					loginAdmin();
 				}						
 		}
 		
@@ -140,8 +174,9 @@ public class UserInterface {
 				else
 					loginUser();
 				
-			} catch (IOException ioe) {		
-				ioe.getMessage();
+			} catch (Exception e) {		
+				e.getMessage();
+				loginUser();
 			}		 
 		}
 
@@ -170,18 +205,20 @@ public class UserInterface {
 							paymentWallet();
 							break;
 						default:
-							throw new WalletException("Invalid Input !\nPlease Log In Again");						
+							throw new WalletException("Invalid Input !\nPlease Enter Valid Input");						
 						}	
 				}while(input5!=5);
 			}
 			catch (NumberFormatException ne) {
-				ne.getMessage();
+				WalletUser.showMsg(ne.getMessage());
+				homePageAdmin();
 			}
 			catch (IOException ioe) {
-				ioe.getMessage();
+				WalletUser.showMsg(ioe.getMessage());
+				homePageAdmin();
 			} catch (WalletException e) {
 				WalletUser.showMsg("Exception occured : "+e.getMessage());
-				loginAdmin();
+				homePageAdmin();
 				
 			}		
 		}
@@ -226,13 +263,15 @@ public class UserInterface {
 			  }while(choice1!=6);
 				
 			}catch (NumberFormatException ne) {
-				ne.getMessage();
+				WalletUser.showMsg(ne.getMessage());
+				 homePageUser(currentUser);
 			}
 			catch (IOException ioe) {
-				ioe.getMessage();
+				WalletUser.showMsg(ioe.getMessage());
+				 homePageUser(currentUser);
 			} catch (WalletException e) {		
 				WalletUser.showMsg("Exception occured : "+e.getMessage());
-				loginUser();
+				 homePageUser(currentUser);
 			}
 			
 	}

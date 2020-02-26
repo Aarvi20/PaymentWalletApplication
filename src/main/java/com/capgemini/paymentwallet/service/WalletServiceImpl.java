@@ -105,7 +105,7 @@ public class WalletServiceImpl implements WalletServiceIntf{
 				return currentUser;
 		}
 		else {
-			WalletUser.showMsg("\nInvalid UserName & Password\n");			
+			WalletUser.showMsg("\nInvalid UserName & Password \n Enter Valid Input\n");			
 			return null;
 		}
 	}
